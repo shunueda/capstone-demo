@@ -7,9 +7,11 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
     apt-get install -y python3 python3-pip curl wget gnupg docker-compose software-properties-common ca-certificates libncurses5
 
-# Node v18 installation
+# Node v18.17.x installation
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt-get install -y nodejs
+RUN npm install -g n
+RUN n 18.17
 
 # Check Node and NPM version
 RUN node -v && npm -v
