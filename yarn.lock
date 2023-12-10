@@ -185,10 +185,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@lehigh-oracle-did23/aries-framework-oracle@^1.0.2":
-  version "1.0.2"
-  resolved "https://npm.pkg.github.com/download/@lehigh-oracle-did23/aries-framework-oracle/1.0.2/fd3a1c103e5c8c79605e358abc544527c48f03a1#fd3a1c103e5c8c79605e358abc544527c48f03a1"
-  integrity sha512-FtUIPxOwToCiJnezW7405F+mPAV2XFi2WDlYd7xbL+7hhq3Z7vRDxK30YVpQ7K0xFASYmCWvwiNn3DN5S4/Lmw==
+"@lehigh-oracle-did23/aries-framework-oracle@^1.0.3-alpha.2":
+  version "1.0.3-alpha.2"
+  resolved "https://npm.pkg.github.com/download/@lehigh-oracle-did23/aries-framework-oracle/1.0.3-alpha.2/68f2efd6258c5575f168be7be89edf0716e03e01#68f2efd6258c5575f168be7be89edf0716e03e01"
+  integrity sha512-1jyckOTaYpKoK38Jx0x3sb+ZtSuI6vK8st0TAFxwGZp6YL2f7SwdDYFPaE+GRfsE1unxAjpRohduT2ChvOT6Bw==
   dependencies:
     "@aries-framework/core" "^0.4.2"
     axios "^1.6.0"
@@ -2013,6 +2013,11 @@ postcss@^8, postcss@^8.4.23:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
+prettier@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.1.0.tgz#c6d16474a5f764ea1a4a373c593b779697744d5e"
+  integrity sha512-TQLvXjq5IAibjh8EpBIkNKxO749UEWABoiIZehEPiY4GNpVdhaFKqSTu+QrlU6D2dPAfubRmtJTi4K4YkQ5eXw==
+
 proxy-addr@~2.0.7:
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/proxy-addr/-/proxy-addr-2.0.7.tgz#f19fe69ceab311eeb94b42e70e8c2070f9ba1025"
@@ -2522,6 +2527,11 @@ update-browserslist-db@^1.0.13:
   dependencies:
     escalade "^3.1.1"
     picocolors "^1.0.0"
+
+use-async-effect@^2.2.7:
+  version "2.2.7"
+  resolved "https://registry.yarnpkg.com/use-async-effect/-/use-async-effect-2.2.7.tgz#5812f875a8d7996c396fb49798d0377e90575989"
+  integrity sha512-Vq94tKPyo/9Nok4LOapV0GoGgZPhbeDW/bP6bulLPV4+lIoftaBRBBbGjTbM+j5W1Bm2EkUHJgapeu5YnQvKEA==
 
 util-deprecate@^1.0.1, util-deprecate@^1.0.2:
   version "1.0.2"

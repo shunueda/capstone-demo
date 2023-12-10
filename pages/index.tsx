@@ -1,111 +1,47 @@
-import { GetServerSidePropsContext } from 'next'
-import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
-import { AskarModule } from '@aries-framework/askar'
-import { agentDependencies, HttpInboundTransport } from '@aries-framework/node'
-import {
-  Agent,
-  ConnectionsModule,
-  CredentialsModule,
-  DidsModule, HttpOutboundTransport,
-  InitConfig, JsonLdCredentialFormatService, ProofsModule,
-  V2CredentialProtocol, W3cCredentialsModule, WsOutboundTransport
-} from '@aries-framework/core'
-import { tokens } from '@/lib/users'
-import {
-  OracleDidRegistrar,
-  OracleDidResolver,
-  OracleModule,
-  OracleModuleConfig
-} from '@lehigh-oracle-did23/aries-framework-oracle'
+import { useState } from 'react'
+import useAsyncEffect from 'use-async-effect'
+import { InitializedAgentNames } from '@/pages/api/initialize'
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const token = context.query.token as string | undefined
-  if (!token) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false
-      }
-    }
-  }
-  const user = tokens[token]
-  console.log("initializing agent")
-  const agent = await initializeIssuerAgent()
-  console.log("initialized agent")
-  return {
-    props: {
-      agent: 'agent'
-    } satisfies Props
-  }
+export default function Home() {
+  const [initializedAgentNames, setInitializedAgentNames] =
+    useState<InitializedAgentNames>()
+  useAsyncEffect(async () => {
+    const res = await fetch('/api/initialize')
+    const json = (await res.json()) as InitializedAgentNames
+    setInitializedAgentNames(json)
+  }, [])
+  return (
+    <>
+      <div className='flex flex-col items-center justify-center min-h-screen'>
+        <div className='flex'>
+          <div className='p-4 border border-gray-200 shadow rounded-md mr-4'>
+            <h1 className='text-lg font-semibold text-center'>Holder Agent</h1>
+            {initializedAgentNames ? (
+              initializedAgentNames.holder
+            ) : (
+              <div className='animate-spin rounded-full h-16 w-16 border-b-2 border-gray-900 mr-auto ml-auto mt-3' />
+            )}
+          </div>
+          <div className='p-4 border border-gray-200 shadow rounded-md'>
+            <h1 className='text-lg font-semibold text-center'>Issuer Agent</h1>
+            {initializedAgentNames ? (
+              initializedAgentNames.issuer
+            ) : (
+              <div className='animate-spin rounded-full h-16 w-16 border-b-2 border-gray-900 mr-auto ml-auto mt-3' />
+            )}
+          </div>
+        </div>
+        <button
+          className={`mt-4 px-6 py-2 rounded text-white font-bold ${
+            initializedAgentNames
+              ? 'bg-blue-500 hover:bg-blue-700'
+              : 'bg-gray-400 cursor-not-allowed'
+          }`}
+          disabled={!initializedAgentNames}
+        >
+          {initializedAgentNames ? 'Continue' : 'Initializing agents...'}
+        </button>
+      </div>
+    </>
+  )
 }
-
-interface Props {
-  agent: string
-}
-
-export default function Home(props: Props) {
-  return <>Search: {props.agent}</>
-}
-
-const initializeIssuerAgent = async () => {
-  // Simple agent configuration. This sets some basic fields like the wallet
-  // configuration and the label. It also sets the mediator invitation url,
-  // because this is most likely required in a mobile environment.
-  const config: InitConfig = {
-    label: "demo-agent-issuer",
-    walletConfig: {
-      id: "mainIssuer",
-      key: "demoagentissuer00000000000000000000",
-    }
-  };
-
-  // A new instance of an agent is created here
-  // Askar can also be replaced by the indy-sdk if required
-  const issuer = new Agent({
-    config,
-    modules: {
-      askar: new AskarModule({ ariesAskar }),
-      connections: new ConnectionsModule({ autoAcceptConnections: true }),
-      dids: new DidsModule({
-        registrars: [new OracleDidRegistrar()],
-        resolvers: [new OracleDidResolver()],
-      }),
-      oracle: new OracleModule(
-        new OracleModuleConfig({
-          networkConfig: {
-            network: `${process.env.BC_URL}`,
-            channel: `${process.env.BC_CHANNEL}`,
-            chaincode: `${process.env.BC_DID_CHAINCODE_NAME}`,
-            encodedCredential: Buffer.from(
-              `${process.env.USERNAME}:${process.env.PASSWORD}`
-            ).toString("base64"),
-          },
-        })
-      ),
-      credentials: new CredentialsModule({
-        credentialProtocols: [
-          new V2CredentialProtocol({
-            credentialFormats: [new JsonLdCredentialFormatService()],
-          }),
-        ],
-      }),
-      w3cCredentials: new W3cCredentialsModule(),
-      proofs: new ProofsModule(),
-    },
-    dependencies: agentDependencies,
-  });
-
-  // Register a simple `WebSocket` outbound transport
-  issuer.registerOutboundTransport(new WsOutboundTransport());
-
-  // Register a simple `Http` outbound transport
-  issuer.registerOutboundTransport(new HttpOutboundTransport());
-
-  // Register a simple `Http` inbound transport
-  issuer.registerInboundTransport(new HttpInboundTransport({ port: 3002 }));
-
-  // Initialize the agent
-  await issuer.initialize();
-
-  return issuer;
-};
