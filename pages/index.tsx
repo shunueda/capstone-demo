@@ -7,9 +7,13 @@ export default function Home() {
   const [initializedAgentNames, setInitializedAgentNames] =
     useState<InitializedAgentNames>()
   useAsyncEffect(async () => {
-    const res = await fetch('/api/initialize')
-    const json = (await res.json()) as InitializedAgentNames
-    setInitializedAgentNames(json)
+    try {
+      const res = await fetch('/api/initialize')
+      const json = (await res.json()) as InitializedAgentNames
+      setInitializedAgentNames(json)
+    } catch (e) {
+      console.error(e)
+    }
   }, [])
   return (
     <>
