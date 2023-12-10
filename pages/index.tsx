@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import useAsyncEffect from 'use-async-effect'
 import { InitializedAgentNames } from '@/pages/api/initialize'
+import Link from 'next/link'
 
 export default function Home() {
   const [initializedAgentNames, setInitializedAgentNames] =
@@ -31,16 +32,18 @@ export default function Home() {
             )}
           </div>
         </div>
-        <button
-          className={`mt-4 px-6 py-2 rounded text-white font-bold ${
-            initializedAgentNames
-              ? 'bg-blue-500 hover:bg-blue-700'
-              : 'bg-gray-400 cursor-not-allowed'
-          }`}
-          disabled={!initializedAgentNames}
-        >
-          {initializedAgentNames ? 'Continue' : 'Initializing agents...'}
-        </button>
+        <Link href='/dashboard'>
+          <button
+            className={`mt-4 px-6 py-2 rounded text-white font-bold ${
+              initializedAgentNames
+                ? 'bg-blue-500 hover:bg-blue-700'
+                : 'bg-gray-400 cursor-not-allowed'
+            }`}
+            disabled={!initializedAgentNames}
+          >
+            {initializedAgentNames ? 'Continue' : 'Initializing agents...'}
+          </button>
+        </Link>
       </div>
     </>
   )
